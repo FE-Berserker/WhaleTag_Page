@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function() {
+      try {
+        const stored = localStorage.getItem('whaletag-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch {}
+    })();
+  </script>
   <title>主题 - WhaleTag 使用说明</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
@@ -13,17 +23,22 @@
         <img src="https://raw.githubusercontent.com/FE-Berserker/WhaleTag/main/resources/logo.png" alt="WhaleTag" class="brand-logo" />
         <span class="brand-name">WhaleTag</span>
       </a>
-      <button class="nav-toggle" aria-label="打开导航" aria-expanded="false"><span></span><span></span><span></span></button>
-      <nav class="site-nav">
-        <a href="../index.html">首页</a>
-        <a href="getting-started.html">快速开始</a>
-        <a href="file-browser.html">文件浏览</a>
-        <a href="tagging.html">标签</a>
-        <a href="perspectives.html">视角</a>
-        <a href="search.html">搜索</a>
-        <a href="extensions.html">扩展</a>
-        <a href="ai-assistant.html">AI 助手</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="site-nav">
+          <a href="../index.html">首页</a>
+          <a href="getting-started.html">快速开始</a>
+          <a href="file-browser.html">文件浏览</a>
+          <a href="tagging.html">标签</a>
+          <a href="perspectives.html">视角</a>
+          <a href="search.html">搜索</a>
+          <a href="extensions.html">扩展</a>
+          <a href="ai-assistant.html">AI 助手</a>
+        </nav>
+        <button class="theme-toggle" aria-label="切换主题" title="切换主题">🌙</button>
+        <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 

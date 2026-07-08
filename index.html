@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhaleTag 使用说明</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function() {
+      try {
+        const stored = localStorage.getItem('whaletag-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch {}
+    })();
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -13,19 +23,22 @@
         <img src="https://raw.githubusercontent.com/FE-Berserker/WhaleTag/main/resources/logo.png" alt="WhaleTag" class="brand-logo" />
         <span class="brand-name">WhaleTag</span>
       </a>
-      <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="site-nav">
-        <a href="index.html" class="active">首页</a>
-        <a href="pages/getting-started.html">快速开始</a>
-        <a href="pages/file-browser.html">文件浏览</a>
-        <a href="pages/tagging.html">标签</a>
-        <a href="pages/perspectives.html">视角</a>
-        <a href="pages/search.html">搜索</a>
-        <a href="pages/extensions.html">扩展</a>
-        <a href="pages/ai-assistant.html">AI 助手</a>
-      </nav>
+      <div class="header-actions">
+        <nav class="site-nav">
+          <a href="index.html" class="active">首页</a>
+          <a href="pages/getting-started.html">快速开始</a>
+          <a href="pages/file-browser.html">文件浏览</a>
+          <a href="pages/tagging.html">标签</a>
+          <a href="pages/perspectives.html">视角</a>
+          <a href="pages/search.html">搜索</a>
+          <a href="pages/extensions.html">扩展</a>
+          <a href="pages/ai-assistant.html">AI 助手</a>
+        </nav>
+        <button class="theme-toggle" aria-label="切换主题" title="切换主题">🌙</button>
+        <button class="nav-toggle" aria-label="打开导航" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -33,7 +46,8 @@
     <section class="hero">
       <div class="container">
         <h1>WhaleTag 使用说明</h1>
-        <p class="hero-subtitle">本地优先、离线、隐私安全的文件管理与打标签桌面应用。</p>
+        <p class="hero-subtitle">本地优先、离线、隐私安全的文件管理与打标签桌面应用。<br/>
+        基于 Electron React Boilerplate(ERB)三进程模型,所有数据留在本机。</p>
         <div class="hero-actions">
           <a href="pages/getting-started.html" class="btn btn-primary">快速开始</a>
           <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener" class="btn btn-secondary">GitHub 仓库</a>
@@ -81,6 +95,45 @@
 
     <section class="section section-alt">
       <div class="container">
+        <h2>技术栈</h2>
+        <table class="tech-table">
+          <tbody>
+            <tr><th>桌面外壳</th><td>Electron 42</td></tr>
+            <tr><th>UI 框架</th><td>React 18 + MUI 9 + Emotion</td></tr>
+            <tr><th>语言</th><td>TypeScript 5.9</td></tr>
+            <tr><th>状态管理</th><td>Redux + redux-persist(主进程同步 IPC)</td></tr>
+            <tr><th>搜索索引</th><td>SQLite FTS5(每位置一个 <code>index.db</code>)</td></tr>
+            <tr><th>国际化</th><td>i18next(en + zh)</td></tr>
+            <tr><th>构建与打包</th><td>Webpack 5 + electron-builder</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>架构(ERB 三进程模型)</h2>
+        <div class="arch-diagram">
+          <pre><code>WhaleTag/
+├── .erb/configs/              # Webpack 配置
+├── resources/builder.json     # electron-builder 配置
+├── release/
+│   ├── app/                   # Electron 应用包
+│   └── build/                 # 安装包输出
+└── src/
+    ├── shared/                # 主进程与渲染进程共享的纯逻辑
+    ├── main/                  # 主进程:所有 IO、缩略图、索引、扩展、AI CLI
+    └── renderer/              # 渲染进程:React UI</code></pre>
+        </div>
+        <p style="text-align:center; color: var(--color-text-muted);">
+          安全模型:<code>contextIsolation: true</code>、<code>nodeIntegration: false</code>、<code>sandbox: true</code>。
+          渲染层只通过 <code>window.whale</code> 桥访问系统能力。
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
         <h2>设计原则</h2>
         <ul class="principle-list">
           <li><strong>本地优先 / 离线:</strong> 无后端、无遥测、无强制云,所有数据都在本机。</li>
@@ -88,18 +141,23 @@
           <li><strong>安全默认:</strong> <code>contextIsolation: true</code>、<code>nodeIntegration: false</code>、<code>sandbox: true</code>。</li>
           <li><strong>可移植元数据:</strong> 标签统一存 sidecar JSON,不改动文件名、不改变文件夹结构。</li>
           <li><strong>平台一致:</strong> 路径三形态归一,支持 Mac/Linux/Windows。</li>
+          <li><strong>免费优先:</strong> 无功能阉割、无试用倒计时、不联网鉴权。</li>
         </ul>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
-        <h2>开始使用</h2>
+        <h2>快速开始</h2>
         <ol class="steps">
-          <li>克隆仓库并安装依赖:<br/><code>npm install</code></li>
+          <li>克隆仓库并安装依赖:<br/><code>git clone git@github.com:FE-Berserker/WhaleTag.git &amp;&amp; cd WhaleTag &amp;&amp; npm install</code></li>
           <li>启动开发模式:<br/><code>npm run dev</code></li>
           <li>在 app 中添加本地文件夹位置,开始浏览与打标签。</li>
         </ol>
+        <div class="callout">
+          <strong>注意:</strong> 启动前请确保 shell 中 <code>ELECTRON_RUN_AS_NODE</code> 已被 unset。
+          残留值会让 Electron 退化成纯 Node 进程,主进程窗口无法弹出。
+        </div>
         <p>详细步骤见 <a href="pages/getting-started.html">快速开始</a>。</p>
       </div>
     </section>
