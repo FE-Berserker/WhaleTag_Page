@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>搜索 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>搜索 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,49 +42,69 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
       <h1>搜索</h1>
       <p class="lead">基于 SQLite FTS5 的即时搜索,覆盖文件名、标签与全文内容。</p>
+    </div>
+  </section>
 
-      <h2>索引结构</h2>
-      <p>每个位置的 <code>.whale/index.db</code> 中维护以下索引:</p>
-      <ul>
-        <li><code>files_fts</code>: 文件名 trigram 索引,支持模糊匹配。</li>
-        <li><code>fulltext_fts</code>: 全文内容索引(对支持提取文本的文件)。</li>
-        <li>EXIF/元数据索引(对图片等媒体文件)。</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#index" class="active">索引结构</a>
+        <a href="#types">搜索方式</a>
+        <a href="#saved">保存搜索</a>
+      </aside>
 
-      <h2>搜索方式</h2>
-      <ul>
-        <li><strong>即时搜索:</strong> 输入即查,结果实时更新。</li>
-        <li><strong>标签搜索:</strong> 输入标签名快速筛选带该标签的文件。</li>
-        <li><strong>高级查询(SearchQuery):</strong> 10 个字段组合查询(文件名、标签、日期、评分等)。</li>
-        <li><strong>保存搜索:</strong> 常用条件可保存,下次一键复用。</li>
-      </ul>
+      <div class="content-area">
+        <article class="content-card" id="index">
+          <h2>索引结构</h2>
+          <p>每个位置的 <code>.whale/index.db</code> 中维护以下索引:</p>
+          <ul>
+            <li><code>files_fts</code>: 文件名 trigram 索引,支持模糊匹配。</li>
+            <li><code>fulltext_fts</code>: 全文内容索引(对支持提取文本的文件)。</li>
+            <li>EXIF/元数据索引(对图片等媒体文件)。</li>
+          </ul>
+        </article>
 
-      <h2>搜索语法示例</h2>
-      <pre><code># 搜索文件名包含 report 的文件
+        <article class="content-card" id="types">
+          <h2>搜索方式</h2>
+          <ul>
+            <li><strong>即时搜索:</strong> 输入即查,结果实时更新。</li>
+            <li><strong>标签搜索:</strong> 输入标签名快速筛选带该标签的文件。</li>
+            <li><strong>高级查询(SearchQuery):</strong> 10 个字段组合查询(文件名、标签、日期、评分等)。</li>
+          </ul>
+          <pre><code># 文件名包含 report
 report
 
-# 搜索带 5star 标签的文件
+# 带 5star 标签
 5star
 
-# 搜索 workflow:done 的文件
+# workflow:done
 done
 
-# 组合:文件名含 invoice 且为 4 星以上
+# 文件名含 invoice 且 4 星以上
 invoice 4star 5star</code></pre>
+        </article>
 
-      <div class="callout">
-        <strong>注意:</strong> 首次添加位置后,WhaleTag 会自动建立索引。后续新增/修改文件会增量更新。
+        <article class="content-card" id="saved">
+          <h2>保存搜索</h2>
+          <p>常用条件可保存,下次一键复用。首次添加位置后,WhaleTag 会自动建立索引;后续新增/修改文件会增量更新。</p>
+          <div class="screenshot-placeholder">搜索界面截图占位</div>
+        </article>
       </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 

@@ -45,9 +45,9 @@
   <main>
     <section class="hero">
       <div class="container">
-        <h1>WhaleTag 使用说明</h1>
-        <p class="hero-subtitle">本地优先、离线、隐私安全的文件管理与打标签桌面应用。<br/>
-        基于 Electron React Boilerplate(ERB)三进程模型,所有数据留在本机。</p>
+        <span class="hero-eyebrow">WHALETAG DOCS</span>
+        <h1>本地优先的文件管理<br/>与打标签工具</h1>
+        <p class="hero-subtitle">离线、隐私安全、基于 Electron + React + TypeScript。所有数据留在本机,标签以 sidecar 形式存储。WhaleTag 提供完整的本地文件工作流。</p>
         <div class="hero-actions">
           <a href="pages/getting-started.html" class="btn btn-primary">快速开始</a>
           <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener" class="btn btn-secondary">GitHub 仓库</a>
@@ -55,117 +55,159 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section-alt">
       <div class="container">
-        <h2>核心能力一览</h2>
-        <div class="feature-grid">
-          <a class="feature-card" href="pages/file-browser.html">
-            <div class="feature-icon">📁</div>
-            <h3>文件浏览</h3>
-            <p>本地文件夹位置、只读标记、目录树、面包屑、虚拟滚动,支持 list/grid/gallery 等基础视图。</p>
-          </a>
-          <a class="feature-card" href="pages/tagging.html">
-            <div class="feature-icon">🏷️</div>
-            <h3>标签系统</h3>
-            <p>基于 <code>.whale/wsd.json</code> sidecar 聚合标签,支持互斥家族(评分/工作流/象限/智能日期/期间)。</p>
-          </a>
-          <a class="feature-card" href="pages/perspectives.html">
-            <div class="feature-icon">🎛️</div>
-            <h3>9 种视角</h3>
-            <p>list、grid、gallery、Task(Kanban/Matrix/Gantt)、calendar、mapique、folderviz、tagcloud、knowledge-graph。</p>
-          </a>
-          <a class="feature-card" href="pages/search.html">
-            <div class="feature-icon">🔍</div>
-            <h3>即时搜索</h3>
-            <p>SQLite FTS5 索引文件名、标签与全文,支持高级查询与保存搜索。</p>
-          </a>
-          <a class="feature-card" href="pages/extensions.html">
-            <div class="feature-icon">🧩</div>
-            <h3>17 个内置扩展</h3>
-            <p>图片、视频、PDF、Office、ePub、字体、Draw.io、Excalidraw、Markdown 等 viewer/editor。</p>
-          </a>
-          <a class="feature-card" href="pages/ai-assistant.html">
-            <div class="feature-icon">🤖</div>
-            <h3>AI 助手</h3>
-            <p>嵌入 Claude Code CLI,支持 ollama/openai HTTP provider,流式侧栏与只读护栏。</p>
-          </a>
+        <div class="section-header">
+          <span class="section-eyebrow">核心能力</span>
+          <h2>为本地文件工作流而生</h2>
+          <p class="section-subtitle">从文件浏览到 AI 助手,WhaleTag 覆盖完整的工作流程。</p>
+        </div>
+        <div class="feature-rows">
+          <div class="feature-row">
+            <a class="feature-card" href="pages/file-browser.html">
+              <div class="feature-icon">📁</div>
+              <h3>文件浏览</h3>
+              <p>本地文件夹位置、只读标记、目录树、面包屑与虚拟滚动。</p>
+            </a>
+            <a class="feature-card" href="pages/tagging.html">
+              <div class="feature-icon">🏷️</div>
+              <h3>标签系统</h3>
+              <p>基于 .whale/wsd.json sidecar,支持评分、工作流、象限等互斥家族。</p>
+            </a>
+            <a class="feature-card" href="pages/perspectives.html">
+              <div class="feature-icon">🎛️</div>
+              <h3>9 种视角</h3>
+              <p>list/grid/gallery/Task/calendar/mapique/folderviz/tagcloud/knowledge-graph。</p>
+            </a>
+          </div>
+          <div class="feature-row">
+            <a class="feature-card" href="pages/search.html">
+              <div class="feature-icon">🔍</div>
+              <h3>即时搜索</h3>
+              <p>SQLite FTS5 索引文件名、标签与全文,支持高级查询与保存搜索。</p>
+            </a>
+            <a class="feature-card" href="pages/extensions.html">
+              <div class="feature-icon">🧩</div>
+              <h3>17 个扩展</h3>
+              <p>图片、视频、PDF、Office、Markdown、Draw.io、Excalidraw 等。</p>
+            </a>
+            <a class="feature-card" href="pages/ai-assistant.html">
+              <div class="feature-icon">🤖</div>
+              <h3>AI 助手</h3>
+              <p>Claude Code CLI + ollama/openai provider,流式侧栏与只读护栏。</p>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt">
-      <div class="container">
-        <h2>技术栈</h2>
-        <table class="tech-table">
-          <tbody>
-            <tr><th>桌面外壳</th><td>Electron 42</td></tr>
-            <tr><th>UI 框架</th><td>React 18 + MUI 9 + Emotion</td></tr>
-            <tr><th>语言</th><td>TypeScript 5.9</td></tr>
-            <tr><th>状态管理</th><td>Redux + redux-persist(主进程同步 IPC)</td></tr>
-            <tr><th>搜索索引</th><td>SQLite FTS5(每位置一个 <code>index.db</code>)</td></tr>
-            <tr><th>国际化</th><td>i18next(en + zh)</td></tr>
-            <tr><th>构建与打包</th><td>Webpack 5 + electron-builder</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
     <section class="section">
       <div class="container">
-        <h2>架构(ERB 三进程模型)</h2>
-        <div class="arch-diagram">
-          <pre><code>WhaleTag/
-├── .erb/configs/              # Webpack 配置
-├── resources/builder.json     # electron-builder 配置
+        <div class="split-section">
+          <div class="split-col">
+            <div class="section-header">
+              <span class="section-eyebrow">技术栈</span>
+              <h2>现代桌面应用技术栈</h2>
+              <p class="section-subtitle">WhaleTag 基于成熟开源技术构建。</p>
+            </div>
+            <div class="tech-list">
+              <div class="tech-item">
+                <span class="tech-dot"></span>
+                <span class="tech-name">Electron 42</span>
+                <span class="tech-desc">桌面外壳与多进程架构</span>
+              </div>
+              <div class="tech-item">
+                <span class="tech-dot"></span>
+                <span class="tech-name">React 18 + MUI 9</span>
+                <span class="tech-desc">响应式用户界面</span>
+              </div>
+              <div class="tech-item">
+                <span class="tech-dot"></span>
+                <span class="tech-name">TypeScript 5.9</span>
+                <span class="tech-desc">类型安全的代码基础</span>
+              </div>
+              <div class="tech-item">
+                <span class="tech-dot"></span>
+                <span class="tech-name">Redux + redux-persist</span>
+                <span class="tech-desc">状态管理与持久化</span>
+              </div>
+              <div class="tech-item">
+                <span class="tech-dot"></span>
+                <span class="tech-name">SQLite FTS5</span>
+                <span class="tech-desc">本地即时全文搜索</span>
+              </div>
+              <div class="tech-item">
+                <span class="tech-dot"></span>
+                <span class="tech-name">Webpack 5</span>
+                <span class="tech-desc">构建与打包工具链</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="split-col">
+            <div class="section-header">
+              <span class="section-eyebrow">架构</span>
+              <h2>ERB 三进程模型</h2>
+              <p class="section-subtitle">Main / Preload / Renderer 清晰分离。</p>
+            </div>
+            <pre><code>WhaleTag/
+├── .erb/configs/
+├── resources/builder.json
 ├── release/
-│   ├── app/                   # Electron 应用包
-│   └── build/                 # 安装包输出
+│   ├── app/
+│   └── build/
 └── src/
-    ├── shared/                # 主进程与渲染进程共享的纯逻辑
-    ├── main/                  # 主进程:所有 IO、缩略图、索引、扩展、AI CLI
-    └── renderer/              # 渲染进程:React UI</code></pre>
+    ├── shared/
+    ├── main/
+    └── renderer/</code></pre>
+            <p style="text-align:center; color: var(--color-text-muted); margin-top: 16px; font-size: 0.9rem;">安全模型: <code>contextIsolation: true</code>、<code>nodeIntegration: false</code>、<code>sandbox: true</code>。渲染层只通过 <code>window.whale</code> 桥访问系统能力。</p>
+          </div>
         </div>
-        <p style="text-align:center; color: var(--color-text-muted);">
-          安全模型:<code>contextIsolation: true</code>、<code>nodeIntegration: false</code>、<code>sandbox: true</code>。
-          渲染层只通过 <code>window.whale</code> 桥访问系统能力。
-        </p>
       </div>
     </section>
 
     <section class="section section-alt">
       <div class="container">
-        <h2>设计原则</h2>
-        <ul class="principle-list">
-          <li><strong>本地优先 / 离线:</strong> 无后端、无遥测、无强制云,所有数据都在本机。</li>
-          <li><strong>数据神圣:</strong> 任何 IO/删除操作 merge 优先于 wipe;错误必须上抛,绝不静默吞。</li>
-          <li><strong>安全默认:</strong> <code>contextIsolation: true</code>、<code>nodeIntegration: false</code>、<code>sandbox: true</code>。</li>
-          <li><strong>可移植元数据:</strong> 标签统一存 sidecar JSON,不改动文件名、不改变文件夹结构。</li>
-          <li><strong>平台一致:</strong> 路径三形态归一,支持 Mac/Linux/Windows。</li>
-          <li><strong>免费优先:</strong> 无功能阉割、无试用倒计时、不联网鉴权。</li>
-        </ul>
+        <div class="section-header">
+          <span class="section-eyebrow">设计原则</span>
+          <h2>本地优先,数据神圣</h2>
+          <p class="section-subtitle">WhaleTag 的产品哲学。</p>
+        </div>
+        <div class="principles-grid">
+          <div class="principle-card">
+            <h3>本地优先</h3>
+            <p>无后端、无遥测、无强制云,所有数据都在本机。</p>
+          </div>
+          <div class="principle-card">
+            <h3>数据神圣</h3>
+            <p>任何 IO/删除操作 merge 优先于 wipe,错误上抛绝不静默吞。</p>
+          </div>
+          <div class="principle-card">
+            <h3>安全默认</h3>
+            <p>contextIsolation / nodeIntegration: false / sandbox 三重保护。</p>
+          </div>
+          <div class="principle-card">
+            <h3>可移植元数据</h3>
+            <p>标签统一存 sidecar JSON,不改动文件名、不改变文件夹结构。</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container">
-        <h2>快速开始</h2>
-        <ol class="steps">
-          <li>克隆仓库并安装依赖:<br/><code>git clone git@github.com:FE-Berserker/WhaleTag.git &amp;&amp; cd WhaleTag &amp;&amp; npm install</code></li>
-          <li>启动开发模式:<br/><code>npm run dev</code></li>
-          <li>在 app 中添加本地文件夹位置,开始浏览与打标签。</li>
-        </ol>
-        <div class="callout">
-          <strong>注意:</strong> 启动前请确保 shell 中 <code>ELECTRON_RUN_AS_NODE</code> 已被 unset。
-          残留值会让 Electron 退化成纯 Node 进程,主进程窗口无法弹出。
-        </div>
-        <p>详细步骤见 <a href="pages/getting-started.html">快速开始</a>。</p>
-      </div>
+    <section class="cta-section">
+      <h2>开始使用 WhaleTag</h2>
+      <p>克隆仓库,安装依赖,启动开发模式,开始管理你的本地文件。</p>
+      <a href="pages/getting-started.html" class="btn btn-primary">查看快速开始 →</a>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="pages/getting-started.html">文档</a>
+      </div>
     </div>
   </footer>
 

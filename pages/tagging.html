@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>标签系统 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>标签系统 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,46 +42,67 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
       <h1>标签系统</h1>
       <p class="lead">WhaleTag 的核心能力。标签以 sidecar 形式存储,不污染原文件名。</p>
+    </div>
+  </section>
 
-      <h2>存储方式</h2>
-      <p>每个被管理的位置下都有一个 <code>.whale/</code> 目录:</p>
-      <ul>
-        <li><code>.whale/wsd.json</code>: 目录级聚合 sidecar,记录该目录下所有带标签的文件。</li>
-        <li><code>.whale/wtaglib.json</code>: 该位置的标签库,包含每个标签的描述、颜色、家族信息。</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#storage" class="active">存储方式</a>
+        <a href="#families">互斥家族</a>
+        <a href="#editing">标签编辑</a>
+      </aside>
 
-      <div class="callout">
-        <strong>可移植:</strong> 因为元数据与文件放在一起,整个文件夹可以复制、移动到别处或另一台电脑,标签不会丢失。
+      <div class="content-area">
+        <article class="content-card" id="storage">
+          <h2>存储方式</h2>
+          <p>每个被管理的位置下都有一个 <code>.whale/</code> 目录:</p>
+          <ul>
+            <li><code>.whale/wsd.json</code>: 目录级聚合 sidecar,记录该目录下所有带标签的文件。</li>
+            <li><code>.whale/wtaglib.json</code>: 该位置的标签库,包含每个标签的描述、颜色、家族信息。</li>
+          </ul>
+          <div class="callout">
+            <strong>可移植:</strong> 因为元数据与文件放在一起,整个文件夹可以复制、移动到别处或另一台电脑,标签不会丢失。
+          </div>
+        </article>
+
+        <article class="content-card" id="families">
+          <h2>互斥家族</h2>
+          <p>标签可按语义分组,同一组内通常只能选一个值:</p>
+          <ul>
+            <li><strong>评分(Rating):</strong> 1–5 星,用于快速标记文件重要程度。</li>
+            <li><strong>工作流(Workflow):</strong> 如「待处理 / 进行中 / 已完成」。</li>
+            <li><strong>象限(Quadrant):</strong> 重要紧急四象限。</li>
+            <li><strong>智能日期(Smart Date):</strong> 自动解析并归入「今天 / 明天 / 本周 / 下周 / 本月 / 下月 / 未来」等桶。</li>
+            <li><strong>期间(Period):</strong> 用于表示某段时间范围,可拖拽落日期。</li>
+          </ul>
+          <div class="screenshot-placeholder">标签编辑面板截图占位</div>
+        </article>
+
+        <article class="content-card" id="editing">
+          <h2>标签编辑</h2>
+          <ul>
+            <li>选中文件后,在属性面板或 InlineTagInput 中输入标签名。</li>
+            <li>支持颜色三级回退:标签自定义颜色 → 家族颜色 → 默认颜色。</li>
+            <li>输入时自动提示已有标签,减少拼写不一致。</li>
+          </ul>
+        </article>
       </div>
-
-      <h2>互斥家族(Mutex Families)</h2>
-      <p>标签可按语义分组,同一组内通常只能选一个值:</p>
-      <ul>
-        <li><strong>评分(Rating):</strong> 1–5 星,用于快速标记文件重要程度。</li>
-        <li><strong>工作流(Workflow):</strong> 如「待处理 / 进行中 / 已完成」。</li>
-        <li><strong>象限(Quadrant):</strong> 重要紧急四象限。</li>
-        <li><strong>智能日期(Smart Date):</strong> 自动解析并归入「今天 / 明天 / 本周 / 下周 / 本月 / 下月 / 未来」等桶。</li>
-        <li><strong>期间(Period):</strong> 用于表示某段时间范围,可拖拽落日期。</li>
-      </ul>
-
-      <h2>标签编辑</h2>
-      <ul>
-        <li>选中文件后,在属性面板或 InlineTagInput 中输入标签名。</li>
-        <li>支持颜色三级回退:标签自定义颜色 → 家族颜色 → 默认颜色。</li>
-        <li>输入时自动提示已有标签,减少拼写不一致。</li>
-      </ul>
-
-      <div class="screenshot-placeholder">标签编辑面板截图占位</div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 

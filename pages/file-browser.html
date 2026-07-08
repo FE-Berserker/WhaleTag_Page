@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文件浏览 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>文件浏览 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,45 +42,60 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
       <h1>文件浏览</h1>
       <p class="lead">浏览本地文件夹、切换位置、管理只读标记,以及使用不同的视图查看文件。</p>
+    </div>
+  </section>
 
-      <h2>位置管理</h2>
-      <ul>
-        <li><strong>添加位置:</strong> 选择一个本地文件夹,WhaleTag 会记住它并在左侧位置列表中显示。</li>
-        <li><strong>最近访问(LRU):</strong> 最近打开过的位置会自动排序到上方。</li>
-        <li><strong>只读标记:</strong> 可将某个位置设为只读,所有写操作都会被拒绝,保护重要数据。</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#locations" class="active">位置管理</a>
+        <a href="#navigation">导航元素</a>
+        <a href="#operations">文件操作</a>
+      </aside>
 
-      <div class="screenshot-placeholder">位置列表面板截图占位</div>
+      <div class="content-area">
+        <article class="content-card" id="locations">
+          <h2>位置管理</h2>
+          <ul>
+            <li><strong>添加位置:</strong> 选择一个本地文件夹,WhaleTag 会记住它并在左侧位置列表中显示。</li>
+            <li><strong>最近访问(LRU):</strong> 最近打开过的位置会自动排序到上方。</li>
+            <li><strong>只读标记:</strong> 可将某个位置设为只读,所有写操作都会被拒绝,保护重要数据。</li>
+          </ul>
+        </article>
 
-      <h2>导航元素</h2>
-      <ul>
-        <li><strong>目录树:</strong> 左侧树状结构快速跳转深层文件夹。</li>
-        <li><strong>面包屑:</strong> 顶部显示当前路径,点击任意层级可快速返回。</li>
-        <li><strong>虚拟滚动:</strong> 文件夹内文件再多也能流畅滚动。</li>
-      </ul>
+        <article class="content-card" id="navigation">
+          <h2>导航元素</h2>
+          <ul>
+            <li><strong>目录树:</strong> 左侧树状结构快速跳转深层文件夹。</li>
+            <li><strong>面包屑:</strong> 顶部显示当前路径,点击任意层级可快速返回。</li>
+            <li><strong>虚拟滚动:</strong> 文件夹内文件再多也能流畅滚动。</li>
+          </ul>
+        </article>
 
-      <h2>基础文件操作</h2>
-      <p>WhaleTag 的主进程负责所有文件 IO,渲染层通过 <code>window.whale</code> 桥调用。支持的操作包括:</p>
-      <ul>
-        <li>重命名、移动、复制、删除文件/文件夹</li>
-        <li>新建文件/文件夹</li>
-        <li>回收站(安全删除,优先合并而非直接擦除)</li>
-      </ul>
-
-      <div class="callout">
-        <strong>安全提示:</strong> 所有写操作都会校验路径是否落在允许的根目录内(<code>assertWithinAllowedRoot</code>),
-        只读位置或越界路径会提前抛错。
+        <article class="content-card" id="operations">
+          <h2>文件操作</h2>
+          <p>WhaleTag 的主进程负责所有文件 IO,渲染层通过 <code>window.whale</code> 桥调用。支持重命名、移动、复制、删除、新建文件/文件夹,以及回收站安全删除。</p>
+          <div class="callout">
+            <strong>安全提示:</strong> 所有写操作都会校验路径是否落在允许的根目录内,只读位置或越界路径会提前抛错。
+          </div>
+          <div class="screenshot-placeholder">文件浏览器主界面截图占位</div>
+        </article>
       </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 

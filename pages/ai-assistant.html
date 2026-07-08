@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 助手 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>AI 助手 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,38 +42,59 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
       <h1>AI 助手</h1>
       <p class="lead">WhaleTag 内置 AI 助手,可通过 Claude Code CLI 或兼容的 HTTP 服务提供流式对话。</p>
+    </div>
+  </section>
 
-      <h2>两种运行模式</h2>
-      <ul>
-        <li><strong>Claude Code CLI 嵌入:</strong> 直接调用本地的 Claude Code CLI,适合已经安装并配置好 Claude Code 的用户。</li>
-        <li><strong>HTTP Provider:</strong> 兼容 ollama 与 OpenAI 格式,可连接本地模型或自定义 API 端点。</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#modes" class="active">运行模式</a>
+        <a href="#channels">通信通道</a>
+        <a href="#guardrails">只读护栏</a>
+      </aside>
 
-      <h2>通信通道</h2>
-      <ul>
-        <li><strong>3 个 IPC 推送:</strong> <code>ai:chunk</code>(流式内容)、<code>ai:error</code>(错误)、<code>ai:approvalRequest</code>(需要用户批准)。</li>
-        <li><strong>13 个 invoke 通道:</strong> 用于发送消息、切换 provider、管理会话等。</li>
-      </ul>
+      <div class="content-area">
+        <article class="content-card" id="modes">
+          <h2>两种运行模式</h2>
+          <ul>
+            <li><strong>Claude Code CLI 嵌入:</strong> 直接调用本地的 Claude Code CLI,适合已经安装并配置好 Claude Code 的用户。</li>
+            <li><strong>HTTP Provider:</strong> 兼容 ollama 与 OpenAI 格式,可连接本地模型或自定义 API 端点。</li>
+          </ul>
+        </article>
 
-      <h2>只读护栏</h2>
-      <p>AI 助手对文件系统的所有写操作都需要经过统一的 <code>decideToolCall</code> 闸门,默认采用只读策略,避免 AI 误改文件。</p>
+        <article class="content-card" id="channels">
+          <h2>通信通道</h2>
+          <ul>
+            <li><strong>3 个 IPC 推送:</strong> <code>ai:chunk</code>(流式内容)、<code>ai:error</code>(错误)、<code>ai:approvalRequest</code>(需要用户批准)。</li>
+            <li><strong>13 个 invoke 通道:</strong> 用于发送消息、切换 provider、管理会话等。</li>
+          </ul>
+          <div class="screenshot-placeholder">AI 助手侧栏截图占位</div>
+        </article>
 
-      <h2>密钥存储</h2>
-      <p>API key 使用 Electron 的 <code>safeStorage</code> 加密保存,不会以明文形式暴露在配置文件或 localStorage 中。</p>
-
-      <div class="callout">
-        <strong>提示:</strong> 当前开发分支可能在 Windows 上遇到 Claude Code CLI 二进制启动失败的问题(libc 不匹配警告)。不影响 WhaleTag 主体功能,仅影响 AI 侧栏;可优先使用 HTTP Provider 或等待后续修复。
+        <article class="content-card" id="guardrails">
+          <h2>只读护栏</h2>
+          <p>AI 助手对文件系统的所有写操作都需要经过统一的 <code>decideToolCall</code> 闸门,默认采用只读策略,避免 AI 误改文件。</p>
+          <p>API key 使用 Electron 的 <code>safeStorage</code> 加密保存,不会以明文形式暴露在配置文件或 localStorage 中。</p>
+          <div class="callout">
+            <strong>提示:</strong> 当前 Windows 开发分支可能遇到 Claude Code CLI 二进制启动失败(libc 不匹配),仅影响 AI 侧栏;可优先使用 HTTP Provider。
+          </div>
+        </article>
       </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 

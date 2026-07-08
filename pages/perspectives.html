@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>视角 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>视角 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,48 +42,66 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
-      <h1>视角(Perspectives)</h1>
+      <h1>视角</h1>
       <p class="lead">用不同的方式查看同一批文件,从 9 种视角中选择最适合当前任务的那一种。</p>
+    </div>
+  </section>
 
-      <h2>基础浏览视图</h2>
-      <ul>
-        <li><strong>List:</strong> 列表视图,文件信息最完整,适合批量查看元数据。</li>
-        <li><strong>Grid:</strong> 网格视图,缩略图与文件名并排,平衡信息密度。</li>
-        <li><strong>Gallery:</strong> 画廊视图,突出媒体预览,适合图片/视频浏览。</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#basic" class="active">基础浏览视图</a>
+        <a href="#task">任务与时间视图</a>
+        <a href="#relation">关系与聚合视图</a>
+      </aside>
 
-      <h2>任务视图(Task)</h2>
-      <ul>
-        <li><strong>Kanban:</strong> 看板,按工作流状态拖拽卡片。</li>
-        <li><strong>Matrix:</strong> 重要性 × 紧急性矩阵。</li>
-        <li><strong>Gantt:</strong> 甘特图,按期间标签展示时间线。</li>
-      </ul>
+      <div class="content-area">
+        <article class="content-card" id="basic">
+          <h2>基础浏览视图</h2>
+          <ul>
+            <li><strong>List:</strong> 列表视图,文件信息最完整,适合批量查看元数据。</li>
+            <li><strong>Grid:</strong> 网格视图,缩略图与文件名并排,平衡信息密度。</li>
+            <li><strong>Gallery:</strong> 画廊视图,突出媒体预览,适合图片/视频浏览。</li>
+          </ul>
+        </article>
 
-      <h2>时间与空间视图</h2>
-      <ul>
-        <li><strong>Calendar:</strong> 日历视图,5 档粒度(日/周/月/年/日程)。</li>
-        <li><strong>Mapique:</strong> 地图视图,基于文件的地理标签展示位置。</li>
-      </ul>
+        <article class="content-card" id="task">
+          <h2>任务与时间视图</h2>
+          <ul>
+            <li><strong>Kanban:</strong> 看板,按工作流状态拖拽卡片。</li>
+            <li><strong>Matrix:</strong> 重要性 × 紧急性矩阵。</li>
+            <li><strong>Gantt:</strong> 甘特图,按期间标签展示时间线。</li>
+            <li><strong>Calendar:</strong> 日历视图,5 档粒度(日/周/月/年/日程)。</li>
+            <li><strong>Mapique:</strong> 地图视图,基于文件的地理标签展示位置。</li>
+          </ul>
+          <div class="screenshot-placeholder">Kanban/Gantt/Calendar 视角截图占位</div>
+        </article>
 
-      <h2>关系与聚合视图</h2>
-      <ul>
-        <li><strong>Folderviz:</strong> 文件夹可视化,直观展示目录大小与层级。</li>
-        <li><strong>Tag Cloud:</strong> 标签云,按标签使用频率展示。</li>
-        <li><strong>Knowledge Graph:</strong> 知识图谱,文件与标签的二分图关系可视化。</li>
-      </ul>
-
-      <h2>全局 viewDepth</h2>
-      <p>所有视角都受全局 <code>viewDepth</code> 控制,可以一次性决定当前视图展开到多深的子目录,不用每个视角单独设置。</p>
-
-      <div class="screenshot-placeholder">Kanban/Gantt/Calendar 等视角截图占位</div>
+        <article class="content-card" id="relation">
+          <h2>关系与聚合视图</h2>
+          <ul>
+            <li><strong>Folderviz:</strong> 文件夹可视化,直观展示目录大小与层级。</li>
+            <li><strong>Tag Cloud:</strong> 标签云,按标签使用频率展示。</li>
+            <li><strong>Knowledge Graph:</strong> 知识图谱,文件与标签的二分图关系可视化。</li>
+          </ul>
+          <div class="callout">
+            <strong>全局 viewDepth:</strong> 所有视角都受全局 <code>viewDepth</code> 控制,可以一次性决定当前视图展开到多深的子目录。
+          </div>
+        </article>
+      </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>主题 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>主题 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,35 +42,56 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
       <h1>主题</h1>
       <p class="lead">WhaleTag 提供 11 种主题,3 款经典 + 8 款策划配色,并支持跟随系统深浅色。</p>
+    </div>
+  </section>
 
-      <h2>主题列表</h2>
-      <ul>
-        <li><strong>经典:</strong> Light / Dark / System(跟随系统)</li>
-        <li><strong>策划:</strong> warm-paper、midnight-plum、frosted-mint、deep-ocean、dawn-blush、forest-ink、soft-amber、high-contrast</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#list" class="active">主题列表</a>
+        <a href="#system">系统模式</a>
+        <a href="#switch">切换方式</a>
+      </aside>
 
-      <h2>如何切换主题</h2>
-      <ol>
-        <li>打开「设置」面板。</li>
-        <li>进入「外观」或「主题」分类。</li>
-        <li>从 12 项 PRESETS 中选择,或选择 System 跟随系统。</li>
-      </ol>
+      <div class="content-area">
+        <article class="content-card" id="list">
+          <h2>主题列表</h2>
+          <ul>
+            <li><strong>经典:</strong> Light / Dark / System(跟随系统)</li>
+            <li><strong>策划:</strong> warm-paper、midnight-plum、frosted-mint、deep-ocean、dawn-blush、forest-ink、soft-amber、high-contrast</li>
+          </ul>
+          <div class="screenshot-placeholder">多主题预览截图占位</div>
+        </article>
 
-      <div class="callout">
-        <strong>实现细节:</strong> `'system'` 值在流入 MUI 的 <code>createTheme</code> 之前会被解析为 'light' 或 'dark',因此 MUI 组件始终拿到确定的模式。
+        <article class="content-card" id="system">
+          <h2>系统模式</h2>
+          <p><code>'system'</code> 值会在流入 MUI 的 <code>createTheme</code> 之前被解析为 <code>'light'</code> 或 <code>'dark'</code>,因此 MUI 组件始终拿到确定的模式,不会出现 mode 不兼容的问题。</p>
+        </article>
+
+        <article class="content-card" id="switch">
+          <h2>切换方式</h2>
+          <ol>
+            <li>打开「设置」面板。</li>
+            <li>进入「外观」或「主题」分类。</li>
+            <li>从 12 项 PRESETS 中选择,或选择 System 跟随系统。</li>
+          </ol>
+        </article>
       </div>
-
-      <div class="screenshot-placeholder">主题切换/多主题预览截图占位</div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 

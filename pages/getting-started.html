@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>快速开始 - WhaleTag 使用说明</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script>
     (function() {
       try {
@@ -13,8 +15,6 @@
       } catch {}
     })();
   </script>
-  <title>快速开始 - WhaleTag 使用说明</title>
-  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="site-header">
@@ -42,48 +42,60 @@
     </div>
   </header>
 
-  <main class="page-content">
+  <section class="page-hero">
     <div class="container">
       <h1>快速开始</h1>
       <p class="lead">从源码克隆到本地,启动 WhaleTag 并开始管理你的第一个文件夹位置。</p>
+    </div>
+  </section>
 
-      <h2>环境要求</h2>
-      <ul>
-        <li><strong>Node.js</strong> ≥ 18</li>
-        <li><strong>npm</strong>(随 Node.js 一起安装)</li>
-        <li><strong>Git</strong>(用于克隆仓库)</li>
-      </ul>
+  <main class="page-main">
+    <div class="page-layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">目录</div>
+        <a href="#requirements" class="active">环境要求</a>
+        <a href="#install">安装与启动</a>
+        <a href="#first-location">添加第一个位置</a>
+      </aside>
 
-      <h2>安装与启动</h2>
-      <ol>
-        <li>克隆仓库:<br/><pre><code>git clone git@github.com:FE-Berserker/WhaleTag.git
-cd WhaleTag</code></pre></li>
-        <li>安装依赖(会下载 Electron 二进制,首次较慢):<br/><pre><code>npm install</code></pre></li>
-        <li>启动开发模式:<br/><pre><code>npm run dev</code></pre></li>
-      </ol>
+      <div class="content-area">
+        <article class="content-card" id="requirements">
+          <h2>环境要求</h2>
+          <ul>
+            <li><strong>Node.js</strong> ≥ 18</li>
+            <li><strong>npm</strong>(随 Node.js 一起安装)</li>
+            <li><strong>Git</strong>(用于克隆仓库)</li>
+          </ul>
+        </article>
 
-      <div class="callout">
-        <strong>注意:</strong> 启动前请确保 shell 中 <code>ELECTRON_RUN_AS_NODE</code> 已被 unset。
-        残留值会让 Electron 退化成纯 Node 进程,主进程窗口无法弹出。
+        <article class="content-card" id="install">
+          <h2>安装与启动</h2>
+          <ol>
+            <li>克隆仓库并进入目录:<br/><code>git clone git@github.com:FE-Berserker/WhaleTag.git &amp;&amp; cd WhaleTag</code></li>
+            <li>安装依赖(会下载 Electron 二进制,首次较慢):<br/><code>npm install</code></li>
+            <li>启动开发模式:<br/><code>npm run dev</code></li>
+          </ol>
+          <div class="callout">
+            <strong>注意:</strong> 启动前请确保 shell 中 <code>ELECTRON_RUN_AS_NODE</code> 已被 unset。残留值会让 Electron 退化成纯 Node 进程,主进程窗口无法弹出。
+          </div>
+        </article>
+
+        <article class="content-card" id="first-location">
+          <h2>添加第一个位置</h2>
+          <p>启动后,点击左侧位置面板中的「添加位置」,选择一个本地文件夹。WhaleTag 会在该文件夹下创建 <code>.whale/</code> 元数据目录,用于存储标签、索引和缩略图,但<strong>不会修改原文件名或文件夹结构</strong>。</p>
+          <div class="screenshot-placeholder">「添加位置」对话框截图占位</div>
+        </article>
       </div>
-
-      <h2>添加第一个位置</h2>
-      <p>启动后,点击左侧位置面板中的「添加位置」,选择一个本地文件夹。WhaleTag 会在该文件夹下创建 <code>.whale/</code> 元数据目录,用于存储标签、索引和缩略图,但<strong>不会修改原文件名或文件夹结构</strong>。</p>
-
-      <div class="screenshot-placeholder">「添加位置」对话框截图占位</div>
-
-      <h2>生产构建与打包</h2>
-      <ul>
-        <li><strong>生产构建:</strong> <code>npm run build</code>,输出到 <code>release/app/dist/</code>。</li>
-        <li><strong>运行生产包:</strong> <code>npm start</code>。</li>
-        <li><strong>打包安装器:</strong> <code>npm run package:win</code> / <code>:mac</code> / <code>:linux</code>。</li>
-      </ul>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>WhaleTag · MIT License · <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a></p>
+    <div class="container footer-inner">
+      <span>© 2026 WhaleTag. MIT License.</span>
+      <div class="footer-links">
+        <a href="https://github.com/FE-Berserker/WhaleTag" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">首页</a>
+      </div>
     </div>
   </footer>
 
