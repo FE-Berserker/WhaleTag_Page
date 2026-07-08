@@ -55,27 +55,34 @@
         <div class="sidebar-title">目录</div>
         <a href="#index" class="active">索引结构</a>
         <a href="#types">搜索方式</a>
+        <a href="#searchquery">SearchQuery 字段</a>
         <a href="#saved">保存搜索</a>
       </aside>
 
       <div class="content-area">
         <article class="content-card" id="index">
           <h2>索引结构</h2>
-          <p>每个位置的 <code>.whale/index.db</code> 中维护以下索引:</p>
+          <p>每个位置的 <code>.whale/index.db</code> 中维护一个独立的 SQLite FTS5 数据库,主要包含:</p>
           <ul>
-            <li><code>files_fts</code>: 文件名 trigram 索引,支持模糊匹配。</li>
-            <li><code>fulltext_fts</code>: 全文内容索引(对支持提取文本的文件)。</li>
-            <li>EXIF/元数据索引(对图片等媒体文件)。</li>
+            <li><code>files</code>: 文件条目表,记录路径、修改时间、大小等元数据。</li>
+            <li><code>files_fts</code>: 文件名 trigram 虚拟表,支持模糊匹配。</li>
+            <li><code>fulltext_fts</code>: 全文内容虚拟表,覆盖纯文本、Markdown、HTML、代码和 PDF。</li>
+            <li><code>exif_processed</code>: 媒体文件的 EXIF/GPS 摘要缓存。</li>
           </ul>
+          <p>索引是<strong>增量且可重建</strong>的:首次添加大目录时可能较慢,但后续仅根据 mtime 变化增量更新。</p>
+          <div class="callout">
+            <strong>批量参数:</strong> 索引写入按 <code>INGEST_BATCH = 1000</code> 分批提交;普通搜索返回上限 <code>QUERY_LIMIT = 50</code>,高级搜索上限 <code>ADV_LIMIT = 300</code>。
+          </div>
         </article>
 
         <article class="content-card" id="types">
           <h2>搜索方式</h2>
           <ul>
-            <li><strong>即时搜索:</strong> 输入即查,结果实时更新。</li>
-            <li><strong>标签搜索:</strong> 输入标签名快速筛选带该标签的文件。</li>
-            <li><strong>高级查询(SearchQuery):</strong> 10 个字段组合查询(文件名、标签、日期、评分等)。</li>
+            <li><strong>顶部搜索框:</strong> 按 Enter 触发,同时匹配文件名 trigram 与标签名。</li>
+            <li><strong>标签搜索:</strong> 输入标签名快速筛选带该标签的文件,支持评分、工作流等家族标签。</li>
+            <li><strong>高级查询(SearchQuery):</strong> 通过 10 个字段组合查询,支持按文件名、标签、类型、大小、修改日期等过滤。</li>
           </ul>
+          <p>全文提取范围包括:纯文本、Markdown、HTML、常见代码文件与 PDF(通过 <code>pdfjs-dist</code>);图片、视频等二进制媒体不参与全文索引。</p>
           <pre><code># 文件名包含 report
 report
 
@@ -89,9 +96,30 @@ done
 invoice 4star 5star</code></pre>
         </article>
 
+        <article class="content-card" id="searchquery">
+          <h2>SearchQuery 10 字段</h2>
+          <table class="data-table">
+            <thead>
+              <tr><th>字段</th><th>说明</th><th>示例</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>text</code></td><td>文件名或全文关键词</td><td><code>"invoice"</code></td></tr>
+              <tr><td><code>tags</code></td><td>包含的标签列表</td><td><code>["5star", "done"]</code></td></tr>
+              <tr><td><code>tagMatch</code></td><td>标签匹配策略:<code>all</code>/<code>any</code></td><td><code>"all"</code></td></tr>
+              <tr><td><code>excludeTags</code></td><td>排除的标签列表</td><td><code>["abandoned"]</code></td></tr>
+              <tr><td><code>type</code></td><td>文件类型过滤</td><td><code>"file"</code>/<code>"folder"</code></td></tr>
+              <tr><td><code>extensions</code></td><td>扩展名白名单</td><td><code>["pdf", "docx"]</code></td></tr>
+              <tr><td><code>sizeMinBytes</code></td><td>最小文件大小(字节)</td><td><code>1024</code></td></tr>
+              <tr><td><code>sizeMaxBytes</code></td><td>最大文件大小(字节)</td><td><code>10485760</code></td></tr>
+              <tr><td><code>modifiedAfter</code></td><td>修改时间之后(ISO 日期)</td><td><code>"2026-01-01"</code></td></tr>
+              <tr><td><code>modifiedBefore</code></td><td>修改时间之前(ISO 日期)</td><td><code>"2026-12-31"</code></td></tr>
+            </tbody>
+          </table>
+        </article>
+
         <article class="content-card" id="saved">
           <h2>保存搜索</h2>
-          <p>常用条件可保存,下次一键复用。首次添加位置后,WhaleTag 会自动建立索引;后续新增/修改文件会增量更新。</p>
+          <p>常用条件可保存为 <code>SavedSearch</code>,通过 <code>redux-persist</code> 持久化,下次一键复用。首次添加位置后,WhaleTag 会自动建立索引;后续新增/修改文件会增量更新。</p>
           <div class="screenshot-placeholder">搜索界面截图占位</div>
         </article>
       </div>

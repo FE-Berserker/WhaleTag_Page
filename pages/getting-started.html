@@ -56,6 +56,10 @@
         <a href="#requirements" class="active">环境要求</a>
         <a href="#install">安装与启动</a>
         <a href="#first-location">添加第一个位置</a>
+        <a href="#scripts">常用脚本</a>
+        <a href="#packaging">构建与打包</a>
+        <a href="#runtime-tools">可选运行时工具</a>
+        <a href="#troubleshooting">故障排查</a>
       </aside>
 
       <div class="content-area">
@@ -84,6 +88,72 @@
           <h2>添加第一个位置</h2>
           <p>启动后,点击左侧位置面板中的「添加位置」,选择一个本地文件夹。WhaleTag 会在该文件夹下创建 <code>.whale/</code> 元数据目录,用于存储标签、索引和缩略图,但<strong>不会修改原文件名或文件夹结构</strong>。</p>
           <img class="screenshot" src="../images/add_location.png" alt="WhaleTag 欢迎界面,点击 ADD LOCATION 添加第一个文件夹位置" />
+        </article>
+
+        <article class="content-card" id="scripts">
+          <h2>常用脚本</h2>
+          <table class="data-table">
+            <thead>
+              <tr><th>脚本</th><th>作用</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>npm run dev</code></td><td>开发模式:webpack serve + electronmon 热重载</td></tr>
+              <tr><td><code>npm run build</code></td><td>生产构建,输出到 <code>release/app/dist</code></td></tr>
+              <tr><td><code>npm start</code></td><td>运行已构建的生产版本</td></tr>
+              <tr><td><code>npm run lint</code></td><td>ESLint 代码检查</td></tr>
+              <tr><td><code>npm run type-check</code></td><td><code>tsc --noEmit</code> 类型检查</td></tr>
+              <tr><td><code>npm test</code></td><td>Electron 测试运行器,覆盖 70+ <code>.test.ts</code> 文件</td></tr>
+              <tr><td><code>npm run clean</code></td><td>清理构建输出</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="content-card" id="packaging">
+          <h2>构建与打包</h2>
+          <p>生产构建会编译主进程、渲染层与 15 个扩展,输出到 <code>release/app/dist</code>。打包则通过 <code>electron-builder</code> 生成安装程序。</p>
+          <pre><code># 生产构建
+npm run build
+
+# 运行生产版本
+npm start
+
+# 打包当前平台
+npm run package
+
+# 打包指定平台
+npm run package:win   # Windows NSIS
+npm run package:mac   # macOS DMG
+npm run package:linux # Linux AppImage
+</code></pre>
+          <div class="callout">
+            <strong>离线打包提示:</strong> 如果处于受限网络,可设置 <code>ELECTRON_BUILDER_NSIS_RESOURCES_DIR</code> 指向本地 nsis-resources 目录,避免从 GitHub 下载。详见 <code>docs/14-packaging.md</code>。
+          </div>
+          <p>打包前请确保:</p>
+          <ul>
+            <li><code>ELECTRON_RUN_AS_NODE</code> 已 unset。</li>
+            <li>已关闭正在运行的 WhaleTag 进程,避免文件占用导致打包失败。</li>
+            <li>原生依赖(<code>better-sqlite3</code>、<code>sharp</code> 等)已通过 <code>@electron/rebuild</code> 完成 Electron ABI 重建。</li>
+          </ul>
+        </article>
+
+        <article class="content-card" id="runtime-tools">
+          <h2>可选运行时工具</h2>
+          <p>以下工具不是 WhaleTag 运行时必需,但会扩展特定格式的支持能力。请自行下载并放到 <code>tools/</code> 目录(这些工具体积较大,不进 git)。</p>
+          <ul>
+            <li><strong>LibreOffice:</strong> 用于 Office 文件缩略图与 office-viewer 预览(<code>doc/docx/xls/xlsx/ppt/pptx/odt/ods/odp</code>)。</li>
+            <li><strong>ODAFileConverter:</strong> 用于 DWG 等 CAD 文件转换与缩略图。</li>
+          </ul>
+        </article>
+
+        <article class="content-card" id="troubleshooting">
+          <h2>故障排查</h2>
+          <ul>
+            <li><strong>启动时报 <code>registerSchemesAsPrivileged</code> / <code>app is undefined</code>:</strong> 检查 <code>ELECTRON_RUN_AS_NODE</code> 是否已 unset,而不是仅设为空字符串。</li>
+            <li><strong>打包报文件占用或 <code>EBUSY</code>:</strong> 先结束所有 <code>WhaleTag.exe</code> / <code>electron.exe</code> 进程,再执行 <code>npm run package:win</code>。</li>
+            <li><strong>首次添加大目录后搜索/缩略图加载慢:</strong> 这是正常的首次索引过程;后续增量更新会快很多。</li>
+            <li><strong>Windows 任务栏图标仍是 Electron 默认鲸鱼:</strong> 当前离线打包配置跳过了 winCodeSign 图标嵌入,是已知问题。</li>
+            <li><strong>AI 助手提示 API key 无效:</strong> 旧安装迁移到新机器/用户后,DPAPI 加密的 key 会失效,需要重新设置。</li>
+          </ul>
         </article>
       </div>
     </div>

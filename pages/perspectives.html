@@ -54,8 +54,12 @@
       <aside class="sidebar">
         <div class="sidebar-title">目录</div>
         <a href="#basic" class="active">基础浏览视图</a>
-        <a href="#task">任务与时间视图</a>
+        <a href="#task">Task 三档子视图</a>
+        <a href="#calendar">日历视图</a>
         <a href="#relation">关系与聚合视图</a>
+        <a href="#viewdepth">全局 viewDepth</a>
+        <a href="#drag-tag">拖拽打标签</a>
+        <a href="#legacy">旧视图迁移</a>
       </aside>
 
       <div class="content-area">
@@ -69,27 +73,60 @@
         </article>
 
         <article class="content-card" id="task">
-          <h2>任务与时间视图</h2>
+          <h2>Task 三档子视图</h2>
+          <p><code>task</code> 并不是一个单一视图,而是一个「第三档」视图:选中 <code>task</code> 后,可在 <strong>Kanban / Matrix / Gantt</strong> 三个子视图间切换。子视图状态保存在全局 <code>localStorage.whale-task-subview</code> 中,对所有文件夹一致。</p>
           <ul>
-            <li><strong>Kanban:</strong> 看板,按工作流状态拖拽卡片。</li>
-            <li><strong>Matrix:</strong> 重要性 × 紧急性矩阵。</li>
-            <li><strong>Gantt:</strong> 甘特图,按期间标签展示时间线。</li>
-            <li><strong>Calendar:</strong> 日历视图,5 档粒度(日/周/月/年/日程)。</li>
-            <li><strong>Mapique:</strong> 地图视图,基于文件的地理标签展示位置。</li>
+            <li><strong>Kanban:</strong> 按工作流阶段分列,支持拖拽卡片、period 标签拖放。</li>
+            <li><strong>Matrix:</strong> 艾森豪威尔 2×2 矩阵(重要 × 紧急),按象限标签布局,未打标签文件进入独立托盘。</li>
+            <li><strong>Gantt:</strong> 纯 DOM 实现,无 ECharts。支持横向滚动、useBarDrag 拖拽调整起止、键盘导航、按工作流分泳道、快捷范围预设(1w/2w/1m/1q)、PNG 导出,以及逾期/进行中视觉标记。</li>
           </ul>
           <div class="screenshot-placeholder">Kanban/Gantt/Calendar 视角截图占位</div>
+        </article>
+
+        <article class="content-card" id="calendar">
+          <h2>日历视图</h2>
+          <ul>
+            <li><strong>Calendar:</strong> 5 档粒度(日 / 周 / 月 / 年 / 日程),按智能日期或期间标签渲染事件。</li>
+            <li><strong>Mapique:</strong> 地图视图,基于文件的 <code>geo:lat,lng</code> 标签展示位置,默认使用高德瓦片。</li>
+          </ul>
         </article>
 
         <article class="content-card" id="relation">
           <h2>关系与聚合视图</h2>
           <ul>
-            <li><strong>Folderviz:</strong> 文件夹可视化,直观展示目录大小与层级。</li>
-            <li><strong>Tag Cloud:</strong> 标签云,按标签使用频率展示。</li>
-            <li><strong>Knowledge Graph:</strong> 知识图谱,文件与标签的二分图关系可视化。</li>
+            <li><strong>Folderviz:</strong> 文件夹可视化,支持树状图、径向图、矩形树图、旭日图,有独立的隐藏/过滤状态。</li>
+            <li><strong>Tag Cloud:</strong> 标签云,字体大小按文件数量平方根缩放。</li>
+            <li><strong>Knowledge Graph:</strong> 基于 xyflow 的文件–标签二分图可视化。</li>
           </ul>
-          <div class="callout">
-            <strong>全局 viewDepth:</strong> 所有视角都受全局 <code>viewDepth</code> 控制,可以一次性决定当前视图展开到多深的子目录。
-          </div>
+        </article>
+
+        <article class="content-card" id="viewdepth">
+          <h2>全局 viewDepth</h2>
+          <ul>
+            <li>全局递归深度 <code>viewDepth</code> 范围 <code>[1, 5]</code>,默认 1,在工具栏可快速调整。</li>
+            <li>所有视角(除 FolderViz 外)共享 <code>DirectoryContentContextProvider</code> 的同一数据集。</li>
+            <li>深度变化有 200ms 防抖;递归加载上限 <code>MAX_RECURSIVE_ENTRIES = 10000</code>。</li>
+            <li>Tag Cloud 与 Knowledge Graph 中排序控件会被隐藏,因为它们是「无效控件」。</li>
+          </ul>
+        </article>
+
+        <article class="content-card" id="drag-tag">
+          <h2>拖拽打标签</h2>
+          <p>任意视角都支持从左侧标签库拖拽标签 chip 到条目上打标签:</p>
+          <ul>
+            <li>支持多选批量打标签。</li>
+            <li>支持拖拽到文件夹、卡片、磁贴、地图标记、图谱节点。</li>
+            <li>拖拽 <code>period:</code> 标签到文件会弹出 <code>PeriodTagDialog</code> 选择日期范围。</li>
+          </ul>
+        </article>
+
+        <article class="content-card" id="legacy">
+          <h2>旧视图迁移</h2>
+          <p>早期版本使用了一些旧视图名,加载文件夹时会通过 <code>migrateViewMode</code> 自动映射:</p>
+          <ul>
+            <li><code>mindmap</code> → <code>knowledge-graph</code></li>
+            <li><code>kanban</code> / <code>matrix</code> → <code>task</code></li>
+          </ul>
         </article>
       </div>
     </div>

@@ -45,7 +45,7 @@
   <section class="page-hero">
     <div class="container">
       <h1>扩展</h1>
-      <p class="lead">内置 17 个 viewer/editor 扩展,通过沙箱 iframe + postMessage 与主进程通信。</p>
+      <p class="lead">内置 15 个 viewer/editor 扩展,通过沙箱 iframe + postMessage 与主进程通信。</p>
     </div>
   </section>
 
@@ -53,44 +53,92 @@
     <div class="page-layout">
       <aside class="sidebar">
         <div class="sidebar-title">目录</div>
-        <a href="#types" class="active">扩展类型</a>
+        <a href="#list" class="active">扩展列表</a>
+        <a href="#manifest">Manifest 与调度</a>
+        <a href="#double-iframe">双层 iframe</a>
         <a href="#revisions">修订历史</a>
         <a href="#security">安全模型</a>
       </aside>
 
       <div class="content-area">
-        <article class="content-card" id="types">
-          <h2>扩展类型</h2>
+        <article class="content-card" id="list">
+          <h2>扩展列表</h2>
+          <p>WhaleTag 目前内置 15 个扩展(11 个 viewer + 4 个 editor)。旧版独立的 <code>text-viewer</code> 已退役,其格式由 <code>text-editor</code> 统一处理。</p>
+          <table class="data-table">
+            <thead>
+              <tr><th>扩展 ID</th><th>类型</th><th>默认支持格式</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>json-viewer</code></td><td>viewer</td><td>json</td></tr>
+              <tr><td><code>html-viewer</code></td><td>viewer</td><td>html / htm</td></tr>
+              <tr><td><code>text-editor</code></td><td>editor</td><td>txt / log / csv / tsv / json / js / ts / css / html / xml / yaml / yml</td></tr>
+              <tr><td><code>md-editor</code></td><td>editor</td><td>md / markdown</td></tr>
+              <tr><td><code>image-viewer</code></td><td>viewer</td><td>jpg / jpeg / png / gif / webp / bmp / avif / tiff / tif / ico / svg</td></tr>
+              <tr><td><code>heic-viewer</code></td><td>viewer</td><td>heic / heif</td></tr>
+              <tr><td><code>pdf-viewer</code></td><td>viewer</td><td>pdf</td></tr>
+              <tr><td><code>media-player</code></td><td>viewer</td><td>10 种视频 + 16 种音频;ape/wma/aiff 等会转码为 Opus</td></tr>
+              <tr><td><code>office-viewer</code></td><td>viewer</td><td>doc / docx / xls / xlsx / ppt / pptx / odt / ods / odp(需 LibreOffice)</td></tr>
+              <tr><td><code>ebook-viewer</code></td><td>viewer</td><td>epub / fb2 / cbz / mobi / azw / azw3</td></tr>
+              <tr><td><code>archive-viewer</code></td><td>viewer</td><td>zip / tar / tgz / tbz2 / txz / gz / bz2 / xz / 7z</td></tr>
+              <tr><td><code>excalidraw-editor</code></td><td>editor</td><td>excalidraw</td></tr>
+              <tr><td><code>drawio-editor</code></td><td>editor</td><td>drawio / dio</td></tr>
+              <tr><td><code>cad-viewer</code></td><td>viewer</td><td>stl / obj / glb / gltf / ply / dxf / step / stp / iges / igs / brep / dwg</td></tr>
+              <tr><td><code>font-viewer</code></td><td>viewer</td><td>ttf / otf / woff / woff2</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="content-card" id="manifest">
+          <h2>Manifest 与调度</h2>
+          <p>每个扩展在构建后生成 <code>manifest.json</code>,包含以下字段:</p>
           <ul>
-            <li><strong>图片查看器:</strong> 支持缩放、旋转、键盘快捷键。</li>
-            <li><strong>媒体播放器:</strong> 视频/音频播放,支持播放列表。</li>
-            <li><strong>PDF 查看器:</strong> 基于 pdfjs,iframe 内渲染。</li>
-            <li><strong>Office 查看器:</strong> docx/xlsx/pptx 预览,依赖本地 LibreOffice。</li>
-            <li><strong>Markdown 编辑器:</strong> 分屏编辑/预览。</li>
-            <li><strong>Draw.io / Excalidraw:</strong> 图形编辑器,双层 iframe 拓扑。</li>
-            <li><strong>电子书查看器:</strong> ePub 阅读与高亮注释。</li>
-            <li><strong>CAD 查看器:</strong> 4 tier 降级渲染 DWG/DXF。</li>
-            <li><strong>压缩包查看器:</strong> 解码 7z/zip 等 9 种归档格式。</li>
-            <li><strong>字体查看器:</strong> 预览字体信息与字符集。</li>
+            <li><code>id</code>、<code>name</code>、<code>type</code>(viewer/editor)、<code>color</code>、<code>fileTypes</code>、<code>entryPoint</code>、<code>enabled</code>、<code>isDefault</code>。</li>
           </ul>
+          <p>双击文件或选择「Open With」时的调度顺序为:</p>
+          <ol>
+            <li>用户为该扩展设置的默认关联。</li>
+            <li>扩展 manifest 中的 <code>isDefault</code> 标记。</li>
+            <li>任意匹配该扩展名的内置扩展。</li>
+            <li>回退到系统默认应用。</li>
+          </ol>
+        </article>
+
+        <article class="content-card" id="double-iframe">
+          <h2>双层 iframe 拓扑</h2>
+          <p><code>excalidraw-editor</code> 与 <code>drawio-editor</code> 这类第三方 webapp 编辑器采用双层 iframe:</p>
+          <ul>
+            <li><strong>外层:</strong> WhaleTag 的 <code>ExtensionHost</code> iframe,负责与主进程 postMessage 通信。</li>
+            <li><strong>内层:</strong> 第三方 webapp 本身运行在另一个 iframe 中,通过外层桥与主进程交互。</li>
+          </ul>
+          <p>要让这种拓扑正常工作,必须同时满足四件套:</p>
+          <ol>
+            <li>在 <code>app.ready</code> 之前注册特权协议 <code>wale-extension://</code>(<code>standard + secure</code>)。</li>
+            <li>主进程不对 <code>whale-extension://</code> 响应套 CSP,由每个扩展的 HTML meta CSP 自行治理。</li>
+            <li>构建第三方 webapp 时不能过滤子目录,确保子资源 200。</li>
+            <li>Draw.io 通过 <code>?proto=json</code> 参数切换到结构化 JSON 协议。</li>
+          </ol>
         </article>
 
         <article class="content-card" id="revisions">
           <h2>修订历史</h2>
-          <p>编辑类扩展会在保存时自动创建修订备份,保存在 <code>.whale/revisions/</code> 下,格式为 <code>&lt;basename&gt;/&lt;ts&gt;.&lt;ext&gt;</code>,可随时回溯。</p>
+          <p>编辑类扩展在保存前会自动创建修订备份,保存在 <code>.whale/revisions/&lt;basename&gt;/&lt;ts&gt;.&lt;ext&gt;</code>,可随时回溯。</p>
+          <ul>
+            <li><strong>IPC 端点:</strong> <code>ext:backupRevision</code>、<code>ext:writeFile</code>、<code>ext:listRevisions</code>、<code>ext:restoreRevision</code>。</li>
+            <li><strong>清理:</strong> 超过 30 天的旧修订会被自动清理。</li>
+            <li><strong>UI:</strong> 通过 <code>RevisionHistoryDialog</code> 查看历史版本并一键恢复。</li>
+          </ul>
         </article>
 
         <article class="content-card" id="security">
           <h2>安全模型</h2>
           <ul>
             <li>扩展运行在 <code>whale-extension://</code> 特权协议的沙箱 iframe 中。</li>
-            <li>扩展与主进程通过 <code>postMessage</code> 通信,并校验 <code>event.source</code>。</li>
-            <li>严格 CSP,防止扩展内嵌脚本逃逸。</li>
+            <li>扩展与主进程通过 <code>postMessage</code> 通信,主进程严格校验 <code>event.source === iframe.contentWindow</code>。</li>
+            <li>每个扩展 HTML 自带独立的严格 CSP meta 标签,防止内嵌脚本逃逸。</li>
+            <li>扩展 iframe 的 <code>sandbox</code> 属性包含 <code>allow-same-origin allow-scripts allow-modals allow-downloads</code>。</li>
           </ul>
         </article>
       </div>
-    </div>
-  </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">

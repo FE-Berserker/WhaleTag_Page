@@ -61,16 +61,21 @@
       <div class="content-area">
         <article class="content-card" id="list">
           <h2>主题列表</h2>
+          <p>WhaleTag 提供 <strong>11 种可选模式</strong>,分为 3 种经典模式与 8 种策划配色。</p>
           <ul>
-            <li><strong>经典:</strong> Light / Dark / System(跟随系统)</li>
-            <li><strong>策划:</strong> warm-paper、midnight-plum、frosted-mint、deep-ocean、dawn-blush、forest-ink、soft-amber、high-contrast</li>
+            <li><strong>经典:</strong> <code>light</code> / <code>dark</code> / <code>system</code>(跟随系统)</li>
+            <li><strong>策划:</strong> <code>warm-paper</code>、<code>midnight-plum</code>、<code>frosted-mint</code>、<code>deep-ocean</code>、<code>dawn-blush</code>、<code>forest-ink</code>、<code>soft-amber</code>、<code>high-contrast</code></li>
           </ul>
+          <div class="callout">
+            <strong>关于 12 项 PRESETS:</strong> 底层 <code>PRESETS</code> 数组实际包含 12 个 token,其中 4 个是老预设(<code>ocean</code>、<code>forest</code>、<code>sunset</code>、<code>mono</code>),仅作向后兼容保留,当前 UI 中不再作为可选模式出现。
+          </div>
           <div class="screenshot-placeholder">多主题预览截图占位</div>
         </article>
 
         <article class="content-card" id="system">
-          <h2>系统模式</h2>
+          <h2>系统模式与解析</h2>
           <p><code>'system'</code> 值会在流入 MUI 的 <code>createTheme</code> 之前被解析为 <code>'light'</code> 或 <code>'dark'</code>,因此 MUI 组件始终拿到确定的模式,不会出现 mode 不兼容的问题。</p>
+          <p><strong>策划模式是固定的:</strong> 8 种策划配色各自基于确定的 light 或 dark 基调,不会随操作系统的深浅色自动切换。例如 <code>warm-paper</code> 始终为浅色,<code>midnight-plum</code> 始终为深色。</p>
         </article>
 
         <article class="content-card" id="switch">
@@ -78,8 +83,9 @@
           <ol>
             <li>打开「设置」面板。</li>
             <li>进入「外观」或「主题」分类。</li>
-            <li>从 12 项 PRESETS 中选择,或选择 System 跟随系统。</li>
+            <li>在 11 项模式中选择,或选择 System 跟随系统。</li>
           </ol>
+          <p>工具栏上的 <strong>ThemeQuickToggle</strong> 也可以按顺序循环切换全部 11 种模式,无需打开设置面板。</p>
         </article>
       </div>
     </div>

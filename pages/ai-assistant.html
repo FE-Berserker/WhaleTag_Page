@@ -53,39 +53,85 @@
     <div class="page-layout">
       <aside class="sidebar">
         <div class="sidebar-title">目录</div>
-        <a href="#modes" class="active">运行模式</a>
-        <a href="#channels">通信通道</a>
+        <a href="#providers" class="active">Provider 配置</a>
+        <a href="#ipc">IPC 通道</a>
+        <a href="#tools">工具能力</a>
         <a href="#guardrails">只读护栏</a>
+        <a href="#windows">Windows 注意事项</a>
       </aside>
 
       <div class="content-area">
-        <article class="content-card" id="modes">
-          <h2>两种运行模式</h2>
+        <article class="content-card" id="providers">
+          <h2>Provider 配置</h2>
+          <p>AI 助手支持三种 provider,可在设置面板切换:</p>
           <ul>
-            <li><strong>Claude Code CLI 嵌入:</strong> 直接调用本地的 Claude Code CLI,适合已经安装并配置好 Claude Code 的用户。</li>
-            <li><strong>HTTP Provider:</strong> 兼容 ollama 与 OpenAI 格式,可连接本地模型或自定义 API 端点。</li>
+            <li><strong>Claude Code CLI:</strong> 内置 bundled 的 Claude Code CLI,通过 <code>@anthropic-ai/claude-agent-sdk</code> 调用。注意:只是免去安装步骤,仍需要 Anthropic 鉴权(API key 或 <code>~/.claude</code> 凭证)。</li>
+            <li><strong>Ollama:</strong> 连接本地 Ollama 服务(如 <code>http://localhost:11434</code>),适合离线使用。</li>
+            <li><strong>OpenAI / 兼容端点:</strong> 任何 OpenAI 兼容 API,API key 通过 Electron <code>safeStorage</code> 加密存储。</li>
           </ul>
+          <p>Ollama 与 OpenAI 共享同一个 <code>HttpChatProvider</code> 运行时。</p>
         </article>
 
-        <article class="content-card" id="channels">
-          <h2>通信通道</h2>
+        <article class="content-card" id="ipc">
+          <h2>IPC 通道</h2>
+          <p>主进程与 AI 侧栏之间共有 16 个 IPC 通道:</p>
+          <h3>3 个推送通道</h3>
           <ul>
-            <li><strong>3 个 IPC 推送:</strong> <code>ai:chunk</code>(流式内容)、<code>ai:error</code>(错误)、<code>ai:approvalRequest</code>(需要用户批准)。</li>
-            <li><strong>13 个 invoke 通道:</strong> 用于发送消息、切换 provider、管理会话等。</li>
+            <li><code>ai:chunk</code> — 流式内容片段</li>
+            <li><code>ai:error</code> — 错误信息</li>
+            <li><code>ai:approvalRequest</code> — 需要用户批准的工具调用</li>
           </ul>
+          <h3>13 个 invoke 通道</h3>
+          <table class="data-table">
+            <thead>
+              <tr><th>通道</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>ai:query</code></td><td>发送用户消息并开始对话</td></tr>
+              <tr><td><code>ai:cancel</code></td><td>取消当前生成</td></tr>
+              <tr><td><code>ai:prewarm</code></td><td>预热 Claude CLI 进程池</td></tr>
+              <tr><td><code>ai:generateTitle</code></td><td>自动生成会话标题</td></tr>
+              <tr><td><code>ai:inlineEdit</code></td><td>内联编辑选中文本</td></tr>
+              <tr><td><code>ai:setApiKey / ai:clearApiKey / ai:hasApiKey</code></td><td>管理 Anthropic API key</td></tr>
+              <tr><td><code>ai:setOpenaiKey / ai:clearOpenaiKey / ai:hasOpenaiKey</code></td><td>管理 OpenAI API key</td></tr>
+              <tr><td><code>ai:discoverCli</code></td><td>探测可用的 Claude CLI 路径</td></tr>
+              <tr><td><code>ai:resolveApproval</code></td><td>用户批准或拒绝工具调用</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="content-card" id="tools">
+          <h2>工具能力</h2>
+          <p>HTTP provider 向模型暴露 5 个工具,Claude CLI 也可通过类似机制操作文件:</p>
+          <ul>
+            <li><code>read_file</code> — 读取文件内容</li>
+            <li><code>list_directory</code> — 列出目录</li>
+            <li><code>list_tags</code> — 获取当前位置的标签与描述</li>
+            <li><code>write_file</code> — 写入文件(需批准)</li>
+            <li><code>apply_tag</code> — 为文件打标签,自动处理互斥家族(需批准)</li>
+          </ul>
+          <p>所有非只读工具都会经过统一的 <code>decideToolCall</code> 闸门,单次对话最多允许 12 轮工具调用。</p>
         </article>
 
         <article class="content-card" id="guardrails">
           <h2>只读护栏</h2>
           <p>AI 助手对文件系统的所有写操作都需要经过统一的 <code>decideToolCall</code> 闸门,默认采用只读策略,避免 AI 误改文件。</p>
-          <p>API key 使用 Electron 的 <code>safeStorage</code> 加密保存,不会以明文形式暴露在配置文件或 localStorage 中。</p>
-          <div class="callout">
-            <strong>提示:</strong> 当前 Windows 开发分支可能遇到 Claude Code CLI 二进制启动失败(libc 不匹配),仅影响 AI 侧栏;可优先使用 HTTP Provider。
-          </div>
+          <ul>
+            <li><code>readOnlyGuard</code> 会拒绝写工具命中只读根,也会拒绝在只读目录下执行 Bash 工具。</li>
+            <li><code>ANTHROPIC_API_KEY</code> / <code>OPENAI_API_KEY</code> 使用 Electron <code>safeStorage</code> 加密保存,不会以明文形式暴露在配置文件或 localStorage 中。</li>
+            <li><code>decideToolCall</code> 对 Claude CLI 与 HTTP provider 均生效,是统一的安全闸门。</li>
+          </ul>
+        </article>
+
+        <article class="content-card" id="windows">
+          <h2>Windows 注意事项</h2>
+          <ul>
+            <li><strong>.cmd shim 问题:</strong> Windows 上通过 <code>.cmd</code> shim 启动 Claude CLI 可能破坏 SDK 的 stdio,优先使用原生 <code>.exe</code> 或 Node 入口。</li>
+            <li><strong>asar 路径重映射:</strong> 主进程传给外部 Node 进程的路径需要从 <code>app.asar</code> 映射到 <code>app.asar.unpacked</code>,否则会出现 <code>MODULE_NOT_FOUND</code>。</li>
+            <li><strong>仍需鉴权:</strong> bundled Claude Code 只是内置了二进制,仍需 Anthropic 鉴权才能使用;可优先使用本地 Ollama 绕过。</li>
+          </ul>
         </article>
       </div>
-    </div>
-  </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">

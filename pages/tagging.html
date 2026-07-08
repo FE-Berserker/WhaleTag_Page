@@ -54,42 +54,70 @@
       <aside class="sidebar">
         <div class="sidebar-title">目录</div>
         <a href="#storage" class="active">存储方式</a>
+        <a href="#library-groups">标签库与组</a>
         <a href="#families">互斥家族</a>
+        <a href="#color-fallback">颜色回退</a>
         <a href="#editing">标签编辑</a>
       </aside>
 
       <div class="content-area">
         <article class="content-card" id="storage">
           <h2>存储方式</h2>
-          <p>每个被管理的位置下都有一个 <code>.whale/</code> 目录:</p>
+          <p>每个被管理的位置下都有一个 <code>.whale/</code> 目录,标签以纯 sidecar 形式存储,<strong>不改动原文件名、不改变文件夹结构</strong>:</p>
           <ul>
-            <li><code>.whale/wsd.json</code>: 目录级聚合 sidecar,记录该目录下所有带标签的文件。</li>
+            <li><code>.whale/wsd.json</code>: 目录级聚合 sidecar,记录该目录下所有带标签的文件,采用稀疏存储。</li>
             <li><code>.whale/wtaglib.json</code>: 该位置的标签库,包含每个标签的描述、颜色、家族信息。</li>
           </ul>
           <div class="callout">
             <strong>可移植:</strong> 因为元数据与文件放在一起,整个文件夹可以复制、移动到别处或另一台电脑,标签不会丢失。
           </div>
+          <p>写 sidecar 时使用目录级写锁与原子写(temp → fsync → rename),避免并发或崩溃导致文件损坏。</p>
+        </article>
+
+        <article class="content-card" id="library-groups">
+          <h2>标签库与组</h2>
+          <ul>
+            <li><strong>标签库:</strong> 左侧「TAG GROUPS」面板展示当前位置的所有标签,可拖拽或点击快速为选中文件打标签。</li>
+            <li><strong>标签组:</strong> 标签可归属于组,组有统一颜色;组成员未单独设置颜色时,会继承组颜色。</li>
+            <li><strong>描述:</strong> 在 <code>wtaglib.json</code> 中可为每个标签添加描述,便于团队协作。</li>
+          </ul>
         </article>
 
         <article class="content-card" id="families">
           <h2>互斥家族</h2>
           <p>标签可按语义分组,同一组内通常只能选一个值:</p>
           <ul>
-            <li><strong>评分(Rating):</strong> 1–5 星,用于快速标记文件重要程度。</li>
-            <li><strong>工作流(Workflow):</strong> 如「待处理 / 进行中 / 已完成」。</li>
-            <li><strong>象限(Quadrant):</strong> 重要紧急四象限。</li>
-            <li><strong>智能日期(Smart Date):</strong> 自动解析并归入「今天 / 明天 / 本周 / 下周 / 本月 / 下月 / 未来」等桶。</li>
-            <li><strong>期间(Period):</strong> 用于表示某段时间范围,可拖拽落日期。</li>
+            <li><strong>评分(Rating):</strong> 1–5 星,互斥,固定金色(<code>#ffcc24</code>)。</li>
+            <li><strong>工作流(Workflow):</strong> 如「待处理 / 进行中 / 已完成」,互斥。</li>
+            <li><strong>象限(Quadrant):</strong> 重要紧急四象限,互斥。</li>
+            <li><strong>智能日期(Smart Date):</strong> 7 种形态:<code>now</code>、<code>today</code>、<code>yesterday</code>、<code>tomorrow</code>、<code>nextWeek</code>、<code>currentMonth</code>、<code>currentYear</code>,互斥。<code>now</code> 标签有约 60 秒新鲜度窗口。</li>
+            <li><strong>期间(Period):</strong> 日期范围 <code>YYYYMMDD-YYYYMMDD</code>,互斥,默认紫色;可从标签库拖拽到文件上,或拖放时打开日期选择对话框。</li>
+            <li><strong>地理(Geo):</strong> <code>geo:lat,lng</code>,允许多个,不在主 chip 列表显示。</li>
           </ul>
           <img class="screenshot" src="../images/tagging.png" alt="WhaleTag 标签编辑面板,展示标签组、智能日期、评分和工作流家族" />
+        </article>
+
+        <article class="content-card" id="color-fallback">
+          <h2>颜色回退</h2>
+          <p>标签颜色按以下优先级解析:</p>
+          <ol>
+            <li>评分固定金色;期间默认紫色(可被覆盖)。</li>
+            <li>标签自定义颜色。</li>
+            <li>所属标签组颜色。</li>
+            <li>工作流 / 象限 / 地理等特殊家族色。</li>
+            <li>默认 outlined 样式。</li>
+          </ol>
         </article>
 
         <article class="content-card" id="editing">
           <h2>标签编辑</h2>
           <ul>
-            <li>选中文件后,在属性面板或 InlineTagInput 中输入标签名。</li>
-            <li>支持颜色三级回退:标签自定义颜色 → 家族颜色 → 默认颜色。</li>
-            <li>输入时自动提示已有标签,减少拼写不一致。</li>
+            <li>选中文件后,在属性面板或 <code>InlineTagInput</code> 中输入标签名。</li>
+            <li><strong>提交:</strong> 按 Enter、Space 或失去焦点(Blur)都会提交标签。</li>
+            <li><strong>删除:</strong> 在空输入框上按 Backspace 会删除最后一个 chip;点击 chip 上的 × 也可删除。</li>
+            <li><strong>只读:</strong> 只读位置下隐藏输入框与删除按钮,只能查看标签。</li>
+            <li><strong>自动补全:</strong> 输入时提示已有标签,减少拼写不一致。</li>
+            <li><strong>互斥收敛:</strong> 为文件添加同一互斥家族的新标签时,旧标签会被自动替换。</li>
           </ul>
         </article>
       </div>

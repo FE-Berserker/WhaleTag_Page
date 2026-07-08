@@ -54,36 +54,86 @@
       <aside class="sidebar">
         <div class="sidebar-title">目录</div>
         <a href="#locations" class="active">位置管理</a>
+        <a href="#history">访问历史</a>
         <a href="#navigation">导航元素</a>
         <a href="#operations">文件操作</a>
+        <a href="#recycle-bin">回收站</a>
+        <a href="#atomic-write">原子写</a>
+        <a href="#context-menu">右键菜单</a>
       </aside>
 
       <div class="content-area">
         <article class="content-card" id="locations">
           <h2>位置管理</h2>
+          <p>位置是 WhaleTag 管理本地文件夹的入口。每个位置对应一个本地目录,所有标签、索引、缩略图都保存在该目录下的 <code>.whale/</code> 中。</p>
           <ul>
             <li><strong>添加位置:</strong> 选择一个本地文件夹,WhaleTag 会记住它并在左侧位置列表中显示。</li>
-            <li><strong>最近访问(LRU):</strong> 最近打开过的位置会自动排序到上方。</li>
-            <li><strong>只读标记:</strong> 可将某个位置设为只读,所有写操作都会被拒绝,保护重要数据。</li>
+            <li><strong>编辑/删除:</strong> 可重命名位置的显示名称或从列表中移除(不会删除真实文件夹)。</li>
+            <li><strong>只读标记:</strong> 将位置设为只读后,该根目录会被排除在 <code>allowedRoots</code> 之外,所有写 IPC 都会提前失败,相关按钮也会禁用。</li>
+          </ul>
+          <div class="callout">
+            <strong>安全提示:</strong> 写操作前主进程会调用 <code>assertWithinAllowedRoot</code> 校验路径,并通过 <code>fs.realpathSync</code> 解析 symlink,防止路径逃逸。
+          </div>
+        </article>
+
+        <article class="content-card" id="history">
+          <h2>访问历史</h2>
+          <ul>
+            <li><strong>LRU 最近访问:</strong> 最近打开过的位置会自动排序到列表上方,方便快速切换。</li>
+            <li><strong>前进/后退栈:</strong> 在不同位置或文件夹间跳转时,可像浏览器一样前进、后退。</li>
           </ul>
         </article>
 
         <article class="content-card" id="navigation">
           <h2>导航元素</h2>
           <ul>
-            <li><strong>目录树:</strong> 左侧树状结构快速跳转深层文件夹。</li>
-            <li><strong>面包屑:</strong> 顶部显示当前路径,点击任意层级可快速返回。</li>
-            <li><strong>虚拟滚动:</strong> 文件夹内文件再多也能流畅滚动。</li>
+            <li><strong>目录树:</strong> 左侧树状结构懒加载子文件夹,可快速展开并跳转到深层目录。</li>
+            <li><strong>面包屑:</strong> 顶部显示当前路径,点击任意层级可快速返回上一级或跳到任意祖先目录。</li>
+            <li><strong>虚拟滚动:</strong> 基于 <code>react-window</code>,文件夹内文件再多也能流畅滚动。</li>
+            <li><strong>可排序列:</strong> 列表视图支持按名称、大小、修改时间等排序。</li>
           </ul>
         </article>
 
         <article class="content-card" id="operations">
           <h2>文件操作</h2>
-          <p>WhaleTag 的主进程负责所有文件 IO,渲染层通过 <code>window.whale</code> 桥调用。支持重命名、移动、复制、删除、新建文件/文件夹,以及回收站安全删除。</p>
-          <div class="callout">
-            <strong>安全提示:</strong> 所有写操作都会校验路径是否落在允许的根目录内,只读位置或越界路径会提前抛错。
-          </div>
+          <p>WhaleTag 的主进程负责所有文件 IO,渲染层通过 <code>window.whale</code> 桥调用。支持重命名、移动、复制、删除、新建文件/文件夹、打开、在资源管理器中显示、复制绝对路径等。</p>
+          <ul>
+            <li><strong>写保护:</strong> 所有写操作都会校验路径是否落在允许的根目录内,只读位置或越界路径会提前抛错。</li>
+            <li><strong>跨卷移动:</strong> 当目标与源不在同一卷时,自动回退为 <code>copyFile + rm</code>,兼容 EXDEV。</li>
+            <li><strong>新建防覆盖:</strong> 新建文件/文件夹时不会覆盖已有同名项。</li>
+            <li><strong>Open With:</strong> 调度顺序为「用户默认设置 → 扩展的 <code>isDefault</code> → 任意匹配扩展 → 系统默认应用」。</li>
+          </ul>
           <img class="screenshot" src="../images/file-browser.png" alt="WhaleTag 文件浏览器主界面,左侧为位置与标签面板,右侧为文件列表" />
+        </article>
+
+        <article class="content-card" id="recycle-bin">
+          <h2>回收站</h2>
+          <ul>
+            <li><strong>默认删除:</strong> 使用 Electron <code>shell.trashItem</code> 移入系统回收站,并弹出 "打开回收站" 按钮。</li>
+            <li><strong>永久删除:</strong> 按住 Shift 或设置 <code>deleteToTrash: false</code> 时,直接调用 <code>fs.rm</code>,不经过回收站。</li>
+          </ul>
+        </article>
+
+        <article class="content-card" id="atomic-write">
+          <h2>原子写</h2>
+          <p>所有关键元数据(sidecar、持久化状态、迁移标志)都通过 <code>atomicWriteText</code> / <code>atomicWriteBytes</code> 写入:</p>
+          <ol>
+            <li>先写入临时文件。</li>
+            <li>调用 <code>fsync</code> 确保数据落盘。</li>
+            <li>通过 <code>renameSync</code> 原子替换目标文件。</li>
+          </ol>
+          <p>这保证了即使进程在写中途崩溃,也不会留下半成品的 <code>wsd.json</code> 或持久化状态。</p>
+        </article>
+
+        <article class="content-card" id="context-menu">
+          <h2>右键菜单</h2>
+          <p>根据点击对象不同,右键菜单会展示不同选项:</p>
+          <ul>
+            <li><strong>文件/多选:</strong> 打开、Open With、复制路径、在资源管理器中显示、重命名、移动、删除、打标签。</li>
+            <li><strong>空白区域:</strong> 新建文件/文件夹、粘贴、刷新、排序。</li>
+            <li><strong>目录树节点:</strong> 展开/折叠、跳转、新建、重命名、删除。</li>
+            <li><strong>位置项:</strong> 编辑名称、设为只读、移除位置、重新索引。</li>
+          </ul>
         </article>
       </div>
     </div>
